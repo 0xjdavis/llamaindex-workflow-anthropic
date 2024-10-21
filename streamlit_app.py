@@ -71,15 +71,15 @@ def render_mermaid(code: str) -> None:
 # Define the workflow function
 def main_workflow(query):
     similar_projects = find_similar_projects(query)
-    st.subheader("Similar Project Ideas")
+    st.subheader("Note: Similar Project Ideas")
     st.write(similar_projects)
 
     project_brief = brainstorm_step(query)
-    st.subheader("Project Design Brief")
+    st.subheader("1. Project Design Brief")
     st.write(project_brief)
 
     flowchart = flowchart_step(project_brief)
-    st.subheader("Flowchart and Recommendations")
+    st.subheader("2. Flowchart and Recommendations")
     st.write(flowchart)
 
     # Extract and render Mermaid diagram
@@ -90,7 +90,7 @@ def main_workflow(query):
         render_mermaid(mermaid_code)
         # STEP 3 is conditional on mermaid running
         user = user_step(project_brief)
-        st.subheader("Persona, Scenario, and User Interview Questions")
+        st.subheader("3. Persona, Scenario, and User Interview Questions")
         st.write(user)
     else:
         st.error("Mermaid flowchart not found in the generated response.")
@@ -122,7 +122,7 @@ def brainstorm_step(query):
         response = anthropic_client.completions.create(
             model="claude-2",
             prompt=brainstorm_prompt,
-            max_tokens_to_sample=100
+            max_tokens_to_sample=333
         )
         project_design_brief = response.completion
         
@@ -146,23 +146,23 @@ def flowchart_step(project_design_brief):
         response = anthropic_client.completions.create(
             model="claude-2",
             prompt=flowchart_prompt,
-            max_tokens_to_sample=100
+            max_tokens_to_sample=333
         )
         return response.completion
     except Exception as e:
         st.error(f"An error occurred while generating the flowchart: {str(e)}")
         return None
 
-# STEP 3 - USER STORY
+# STEP 3 - USER STORY PERSONA
 def user_step(project_design_brief):
     interview_prompt = f"{HUMAN_PROMPT} Based on the following Project Design Brief, please:\n\n1. Create a Persona based on the defined target audience and target market.\n\n2. Create a day in the life scenario for that Persona to describe the problem the application will solve highlighting the pain points of the experience.\n\n3. Create a list of questions for a user interview for the persona of a boat owner that services their high-end boat at a marina. Ask these questions to strategically balance both quantitative and qualitative aspects of user research principles.\n\nProject Design Brief:\n{project_design_brief}\n\nPlease format your response in three sections:\n1. Persona\n2. Scenario\n3. Interview\n\n{AI_PROMPT}"
 
     try:
-        # Generate response
+        # Generate persona response
         response = anthropic_client.completions.create(
             model="claude-2",
             prompt=interview_prompt,
-            max_tokens_to_sample=100
+            max_tokens_to_sample=333
         )
         return response.completion
     except Exception as e:
