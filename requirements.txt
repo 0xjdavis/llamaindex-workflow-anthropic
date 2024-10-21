@@ -1,1 +1,15 @@
 streamlit
+python-dotenv
+#AI STACK
+pinecone
+llama_index
+llama_index.core
+# STORAGE
+llama_index.vector_stores.pinecone
+# LLM
+llama_index.llms.anthropic
+llama_index.llms.openai
+# EMBEDDINGS
+llama_index.embeddings.openai
+# WORKFLOW
+llama-index-utils-workflow
